@@ -49,7 +49,7 @@ habitRouter.get("/id/:id", async(req,res)=>{
         const {id} = req.params;
         const habits = await habitModel.findById(id);
         if(!habits){
-            res.status(404).json({
+           return res.status(404).json({
                 message:"No data with this id "
             });
         }
@@ -69,7 +69,7 @@ habitRouter.get("/category/:category" , async(req,res)=>{
         const {category} = req.params;
         const habits = await habitModel.find({categories : category});
         if(!habits){
-            res.status(404).json({
+           return res.status(404).json({
                 message:"There is no data in this category"
             });
         };
@@ -85,5 +85,50 @@ habitRouter.get("/category/:category" , async(req,res)=>{
     };
 });
 
+        // update habit
+
+habitRouter.put("/update/:id" , async(req,res)=>{
+    try{
+        const habits = await habitModel.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            {new : true}
+        );
+        if(!habits){
+            return res.status(404).json({ message: "Habit not found" });
+        }
+
+        res.status(200).json({
+            message :"The habit is updated",
+            data:habits
+        });
+    }
+    catch(err){
+        res.status(500).json({
+            err : err.message
+        });
+    };
+    
+});
+
+        // delete habit
+habitRouter.delete("/delete/:id" ,async (req,res)=>{
+    try{
+        const habits =  await habitModel.findByIdAndDelete(req.params.id);
+        if (!habits){
+            return res.status(404).json({
+                message:"There is no such habit with this id"
+            });
+        }
+        res.status(200).json({
+            message:"The habit is deleted"
+        })
+    }
+    catch(err){
+        res.status(500).json({
+            err : err.message
+        });
+    };
+});
 
 module.exports = habitRouter;
