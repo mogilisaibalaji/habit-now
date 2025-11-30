@@ -17,6 +17,7 @@ const habitSchema = new mongoose.Schema({
 const taskSchema = new mongoose.Schema({
     taskName : {type:String , required: true},
     description :String, 
+    categories : String,
     startDate : {type: Date , required : true},
     endDate : Date
 });
